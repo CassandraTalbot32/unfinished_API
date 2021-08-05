@@ -1,5 +1,9 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" context="IE-edge">
+	<meta name= "viewport" content="width=device-width, initial-scale=1.0"> 
 <style>
 
  title{
@@ -26,8 +30,16 @@ form{
 <h1>Request example</h1>
 	
 <body>
+	{%for i in address%}
+
+	<p>{{ i.address }}</p>
+	<p>{{ current energy rating }}</p>
+	<p>{{ potential energy rating }}</p>
+
+	
 <form method="POST" action="/epc_ratings/rating/">
-Post Code : <input type="text" name="code">
+	{% csrf_token %}
+Address : <input type="text" name="code">
 <input type="submit">
 </form>
 </body>
