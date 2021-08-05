@@ -1,28 +1,19 @@
-from django.http import HttpResponse 
 from django.shortcuts import render
-from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+import requests
+API_KEY = 'd3f2194bc218cd398dff1daabc83b4c95a74ad9e'
 
-from .forms import LocationForm
+def location(request):
+    url = f'https://epc.opendatacommunities.org/api/v1/display/search?size=1000&from=1000?address=in&LMK_KEY={API_KEY}'
+    response = requests.get(url).json()
+    rating = response.json()
+    
+    address = rating['address']
 
-def locationView(request):
-    if request.method == 'GET':
-        form = LocationForm()
-    else:
-        form = LocationForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
-            website = form.cleaned_data['website']
-            number = form.cleaned_data['number']
-            about = form.cleaned_data['about']
-            try:
-                send_mail(name, email, about, ['cassandratalbot@yahoo.co.uk'])
-            except BadHeaderError:
-                return HttpResponse('Invalid header found.')
-            return redirect('rating.html/')
-    return render(request, "location.html", {'form': form})
+    context = {
+    'rating' : rating
+    }
 
-def ratingView(request, *args, **kwargs):
-    return render(request, "rating.html/",)
+    return render(request, 'epc_ratings/location.html', context)
+
+
+ 
